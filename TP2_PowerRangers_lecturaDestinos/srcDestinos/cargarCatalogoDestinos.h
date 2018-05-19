@@ -22,23 +22,26 @@ class CargarCatalogoDestinos{
 	public:
 
 		/*
-		 * post: constructor recibe puntero a la lista de cultivos;
+		 * post: crea una lista de punteros a clase Destino y
+		 * se la asigna a 'destinos'
 		 */
 		CargarCatalogoDestinos();
 
 
 		/*
-		 * post: lee un archivo txt, y agrega los datos a una
-		 * lista de punteros a cultivos
+		 * post: lee el archivo .txt a recibido por 'rutaEntrada'
+		 *
 		 */
 		void leerArchivo(std::string rutaEntrada);
 
 
 		/*
-		 * pre: recibe un string tipo getline del archivo cultivos.txt
-		 * post: cargar los datos en un vector y se los pasa a
+		 * post: recibe un string tipo getline del metodo leerArchivo
+		 * cargar los datos en un vector, los convierte a enteros y se los pasa
+		 * al constructor Destino y los agrega a la lista 'destinos'
 		 */
-		void cargarStringAVector(std::string stringLinea);
+
+		void cargarStringADestino(std::string stringLinea);
 
 
 
@@ -46,7 +49,7 @@ class CargarCatalogoDestinos{
 
 
 		/*
-		 * post: libera cada puntero a cultivo que se fueron agregando
+		 * post: libera cada puntero a Destino que se fueron agregando
 		 * como datos a la lista
 		 */
 		~CargarCatalogoDestinos();

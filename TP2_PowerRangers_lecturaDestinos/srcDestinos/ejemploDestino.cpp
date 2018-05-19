@@ -10,6 +10,7 @@
 
 #include "cargarCatalogoDestinos.h" //para leer el txt y cargar la lista
 
+
 //jugar
 int main() {
 
@@ -27,6 +28,7 @@ int main() {
 
 	destinos->iniciarCursor();
 
+
 	// solo para ver si la lista cargo bien los datos del txt, no es un uso
 	while (destinos->avanzarCursor()){
 
@@ -35,10 +37,7 @@ int main() {
 
 
 	}
-//////////////////
-
 
 	return 0;
 }
-
 

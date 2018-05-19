@@ -5,10 +5,10 @@
  *      Author: agustin
  */
 
-
 #include <fstream>
 #include <sstream>
 #include "cargarCatalogoDestinos.h"
+
 
 
 CargarCatalogoDestinos::CargarCatalogoDestinos(){
@@ -18,37 +18,31 @@ CargarCatalogoDestinos::CargarCatalogoDestinos(){
 
 }
 
-//void leer archivo, solo lee y delega la tarea a otro
+
+
 void CargarCatalogoDestinos::leerArchivo(std::string rutaEntrada) {
 
-
-	/* crea el archivo y abre la ruta especificada */
 	std::ifstream entrada;
 	entrada.open(rutaEntrada.c_str());
 
-	//declara un string
 	std::string stringLinea;
 
-
-	/* lee el resto del archivo */
 	while (! entrada.eof()) {
-
 
 		std::getline(entrada, stringLinea);
 
-		//clase funcion que haga todos lo de bajo
 
-		this -> cargarStringAVector(stringLinea);
+		this -> cargarStringADestino(stringLinea);
 
+	}
 
-	} // while
-	/* cierra el archivo, liberando el recurso */
 	entrada.close();
 
 }
 
 
-void CargarCatalogoDestinos::cargarStringAVector(std::string getLinea){
+
+void CargarCatalogoDestinos::cargarStringADestino(std::string getLinea){
 
 	int i=0;
 
@@ -69,13 +63,14 @@ void CargarCatalogoDestinos::cargarStringAVector(std::string getLinea){
 
 	Destino* ptrADestino;
 
+
 	std::string destino = vectorDeStrings[0];
 
 	int distancia= Traductor.convertirAEntero(vectorDeStrings[1]);
 
 	std::string cultivo=vectorDeStrings[2];
 
-	/*asigno un espacio en el heap para un puntero a una Estrella*/
+
 	ptrADestino = new Destino(destino, distancia, cultivo);
 
 	this->destinos->agregar(ptrADestino);
@@ -87,11 +82,11 @@ void CargarCatalogoDestinos::cargarStringAVector(std::string getLinea){
 
 
 
-/////
 Lista<Destino*>* CargarCatalogoDestinos::obtenerPunteroAListaDeDestinos(){
 
 	return this ->destinos;
 }
+
 
 
 
