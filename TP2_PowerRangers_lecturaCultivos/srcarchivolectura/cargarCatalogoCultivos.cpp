@@ -11,15 +11,16 @@
 #include "cargarCatalogoCultivos.h"
 
 
-CargaCatalogoCultivos::CargaCatalogoCultivos(/*Lista<Cultivo*>* cultivos*/){
+CargarCatalogoCultivos::CargarCatalogoCultivos(){
 
 
 	this -> cultivos = new Lista <Cultivo*>;
 
 }
 
-//void leer archivo, solo lee y delega la tarea a otro
-void CargaCatalogoCultivos::leerArchivo(std::string rutaEntrada) {
+
+
+void CargarCatalogoCultivos::leerArchivo(std::string rutaEntrada) {
 
 
 	/* crea el archivo y abre la ruta especificada */
@@ -27,18 +28,18 @@ void CargaCatalogoCultivos::leerArchivo(std::string rutaEntrada) {
 	entrada.open(rutaEntrada.c_str());
 
 	//declara un string
-	std::string stringLinea;
+	std::string getLinea;
 
 
 	/* lee el resto del archivo */
 	while (! entrada.eof()) {
 
 
-		std::getline(entrada, stringLinea);
+		std::getline(entrada, getLinea);
 
 		//clase funcion que haga todos lo de bajo
 
-		this -> cargarStringAVector(stringLinea);
+		this -> cargarStringACultivo(getLinea);
 
 
 	} // while
@@ -48,7 +49,7 @@ void CargaCatalogoCultivos::leerArchivo(std::string rutaEntrada) {
 }
 
 
-void CargaCatalogoCultivos::cargarStringAVector(std::string getLinea){
+void CargarCatalogoCultivos::cargarStringACultivo(std::string getLinea){
 
 	int i=0;
 
@@ -67,7 +68,7 @@ void CargaCatalogoCultivos::cargarStringAVector(std::string getLinea){
 	}
 
 
-	Cultivo* ptrEstrella;
+	Cultivo* punteroCultivo;
 
 	std::string cultivo = vectorDeStrings[0];
 
@@ -82,10 +83,10 @@ void CargaCatalogoCultivos::cargarStringAVector(std::string getLinea){
 	int aguaTurno=Traductor.convertirAEntero(vectorDeStrings[5]);
 
 	/*asigno un espacio en el heap para un puntero a una Estrella*/
-	ptrEstrella = new Cultivo(cultivo, costoSemilla, tiempoCosecha,
+	punteroCultivo = new Cultivo(cultivo, costoSemilla, tiempoCosecha,
 			 rentabilidad, tiempoRecuperacion, aguaTurno);
 
-	this->cultivos->agregar(ptrEstrella);
+	this->cultivos->agregar(punteroCultivo);
 
 
 	return;
@@ -93,16 +94,14 @@ void CargaCatalogoCultivos::cargarStringAVector(std::string getLinea){
 
 
 
-
-/////
-Lista<Cultivo*>* CargaCatalogoCultivos::obtenerPunteroAListaDeCultivos(){
+Lista<Cultivo*>* CargarCatalogoCultivos::obtenerPunteroAListaDeCultivos(){
 
 	return this ->cultivos;
 }
 
 
 
-CargaCatalogoCultivos::~CargaCatalogoCultivos(){
+CargarCatalogoCultivos::~CargarCatalogoCultivos(){
 
 	cultivos->iniciarCursor();
 

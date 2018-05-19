@@ -1,5 +1,4 @@
 /*
- * agendaEstelar.h
  *
  *  Created on: May 12, 2018
  *      Author: agustin
@@ -12,46 +11,49 @@
 #include "Lista.h"
 #include "Traductor.h"
 
-class CargaCatalogoCultivos{
+class CargarCatalogoCultivos{
 
 	private:
 
 
-		Lista<Cultivo*>* cultivos; // TAL VEZ NO
+		Lista<Cultivo*>* cultivos;
 
 
 	public:
 
 		/*
-		 * post: constructor recibe puntero a la lista de cultivos;
+		 * post: crea una lista de punteros a clase Cultivo y
+		 * la asigna a 'cultivos'
 		 */
-		CargaCatalogoCultivos(/*Lista<Cultivo*>* cultivos*/);
+		CargarCatalogoCultivos();
 
 
 		/*
-		 * post: lee un archivo txt, y agrega los datos a una
-		 * lista de punteros a cultivos
+		 * post: lee el archivo .txt a recibido por 'rutaEntrada'
 		 */
 		void leerArchivo(std::string rutaEntrada);
 
 
 		/*
-		 * pre: recibe un string tipo getline del archivo cultivos.txt
-		 * post: cargar los datos en un vector y se los pasa a
+		 * pre:
+		 * post: recibe un string tipo getline del metodo leerArchivo
+		 * cargar los datos en un vector, los convierte a enteros y se los pasa
+		 * al constructor Cultivo y los agrega a la lista 'cultivos'
 		 */
-		void cargarStringAVector(std::string stringLinea);
+		void cargarStringACultivo(std::string stringLinea);
 
 
 		/*
-		 *
+		 * post: devuelve el atributo 'cultivos'
 		 */
 		Lista<Cultivo*>* obtenerPunteroAListaDeCultivos();
+
 
 		/*
 		 * post: libera cada puntero a cultivo que se fueron agregando
 		 * como datos a la lista
 		 */
-		~CargaCatalogoCultivos();
+		~CargarCatalogoCultivos();
 
 
 };

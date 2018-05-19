@@ -18,15 +18,14 @@ int main() {
 	std::string archivoCultivos = "cultivos.txt";
 
 	//creo un puntero que apunta a listaCultivos
-	Lista <Cultivo*>* cultivos;//= &listaCultivos;
+	Lista <Cultivo*>* cultivos;
 
-	CargaCatalogoCultivos cargarCatalogo;//(cultivos);
+	CargarCatalogoCultivos cargarCatalogo;//(cultivos);
 
 	cargarCatalogo.leerArchivo(archivoCultivos);
 
 	//testeo
 
-	//
 	cultivos = cargarCatalogo.obtenerPunteroAListaDeCultivos();
 
 	CatalogoCultivos catalogo;
@@ -47,8 +46,6 @@ int main() {
 
 
 	}
-//////////////////
-
 
 	return 0;
 }
