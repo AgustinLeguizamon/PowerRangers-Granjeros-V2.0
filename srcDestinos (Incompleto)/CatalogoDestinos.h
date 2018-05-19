@@ -19,7 +19,7 @@ class CatalogoDestinos{
 		 * post: devuelve el puntero a la clase Destino que tenga
 		 * como atributo this->cultivo al (char cultivo)
 		 */
-		Destino* obtenerDestino(Lista <Destino*>* destinos, char cultivo);
+		Destino* obtenerDestino(Lista <Destino*>* daniela, char cultivo);
 
 
 
