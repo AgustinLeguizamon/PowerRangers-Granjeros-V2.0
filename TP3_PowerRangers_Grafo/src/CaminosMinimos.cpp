@@ -10,12 +10,14 @@
 //#include "HIIIIIP"
 
 
-void CaminosMinimos::caminosMinimos(Lista<Arribo*>* heap, Lista<Viaje*>* listaDeAdyacencia){
+void CaminosMinimos::caminosMinimos(/*ojo que no es una lista, reemplazar por heap*/
+		Lista<Arribo*>* heap, Lista<Viaje*>* listaDeAdyacencia){
+
 
 	while (!heap->estaVacia()){
 
 		/****METODO DEL HEAP****////
-		Arribo* almacenAProvincia = heap->removerRaiz();
+		Arribo* almacenAProvincia = heap->quitarRaiz();
 
 		//busca en la lista de adyacencia, la lista de arribos de almacen
 		Lista<Arribo*>* arribosAlmacen = buscarEnListaDeAdyacenciaPorNombre(listaDeAdyacencia, "ALMACEN"); //el metodo busca la clase que tenga nombre ALMACEN
@@ -28,14 +30,15 @@ void CaminosMinimos::caminosMinimos(Lista<Arribo*>* heap, Lista<Viaje*>* listaDe
 
 		while(arribosProvincia->avanzarCursor()){
 
-			//obtiene el primer arribo de la lista de arribos de la provincia de viajes
+			/*obtiene el arribo actual de la lista de arribos*/
 			Arribo* provinciaAProvincia = arribosProvincia->obtenerCursor();
 
-			//busca la distancia desde almacen hasta la provincia actual de la lista arribos
+			/*busca la distancia desde almacen hasta la provincia actual
+			en la lista de arribos de Almacen*/
 			Arribo* candidatoAlmacenAProvincia = buscarEnListaDeArribos(arribosAlmacen, provinciaAProvincia);
 
 
-			if (elCosteDeLaSumaEsMenorAlCosteDirecto(almacenAProvincia,provinciaAProvincia, candidatoAlmacenAProvincia)){
+			if (candidatoAlmacenAProvincia != NULL && elCosteDeLaSumaEsMenorAlCosteDirecto(almacenAProvincia,provinciaAProvincia, candidatoAlmacenAProvincia)){
 
 				int nuevoCosto= almacenAProvincia->obtenerCosto() + provinciaAProvincia->obtenerCosto();
 
@@ -43,7 +46,10 @@ void CaminosMinimos::caminosMinimos(Lista<Arribo*>* heap, Lista<Viaje*>* listaDe
 				candidatoAlmacenAProvincia->modificarCosto(nuevoCosto);
 
 				/****METODO DEL HEAP******/
-				reordenarHeap();
+				heap->promover(candidatoAlmacenAProvincia);
+				/**puede ser que la provincia ya no este en el heap, en este caso
+				 * no pasa nada
+				 */
 			}
 
 		}
@@ -70,7 +76,7 @@ Lista<Arribo*>* CaminosMinimos::buscarEnListaDeAdyacencia(Lista<Viaje*>*
 	bool encontro=false;
 
 
-	Lista<Arribo*> arribos=NULL;
+	Lista<Arribo*>* arribos=NULL;
 	/* si no tiene ningun arribo, no debería estar en la lista de adyacencia
 	desde un principio*/
 
@@ -98,7 +104,7 @@ Lista<Arribo*>* CaminosMinimos::buscarEnListaDeAdyacenciaPorNombre(Lista<Viaje*>
 
 	bool encontro=false;
 
-	Lista<Arribo*> arribos=NULL;
+	Lista<Arribo*>* arribos=NULL;
 	/* si no tiene ningun arribo, no debería estar en la lista de adyacencia
 	desde un principio*/
 
@@ -129,8 +135,6 @@ Arribo* CaminosMinimos::buscarEnListaDeArribos(Lista<Arribo*>* listaDeArribos,
 
 
 	Arribo* arribo=NULL;
-	/* si no tiene ningun arribo, no debería estar en la lista de adyacencia
-	desde un principio*/
 
 	listaDeArribos->iniciarCursor();
 
@@ -150,7 +154,18 @@ Arribo* CaminosMinimos::buscarEnListaDeArribos(Lista<Arribo*>* listaDeArribos,
 }
 
 
-/*NOTA: como hago para no hacer tres metodos de busqueda para evitar repetir tanto codigo
+/*NOTA:son tres metodos de busqueda
  * la primera busca una lista de arribos en la lista de adyacencia
  * la segunda busca una lista de arribos en la lista de adyacencia por nombre string
  * la tercera busca un arribo en una lista de arribos*/
+
+
+/*IMPORTANTE: el codigo actual obtiene las provincias de la lista de almacen
+ * si el arribo no esta, devuelve NULL por lo cual nunca va a mejorar el coste
+ * de aquellos que no aparezcan desde un principio.
+ *
+ * Ver de buscar el puntero en el heap y agregarlo a la lista de adyacencia,
+ * si no s encuentra en el heap es porque ya salio, devuelve NULL
+ * y te ahorras el hacer las cuentas
+ *
+ */
