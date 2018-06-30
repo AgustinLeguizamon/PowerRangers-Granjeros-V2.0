@@ -8,10 +8,13 @@
 #include "CaminosMinimos.h"
 #include "Cola.h"
 
-Lista<Arribo*>* CaminosMinimos::caminosMinimos(Cola<Arribo*>* heap, Lista<Viaje*>* listaDeAdyacencia){
+
+Lista<Arribo*>* CaminosMinimos::caminosMinimosSegunLaSemilla(Cola<Arribo*>* heap,
+		Lista<Viaje*>* listaDeAdyacencia,Semilla* unaSemilla){
 
 	//busca en la lista de adyacencia, la lista de arribos de almacen
-	Lista<Arribo*>* arribosAlmacen = buscarEnListaDeAdyacenciaPorNombre(listaDeAdyacencia, "ALMACEN");
+	Lista<Arribo*>* arribosAlmacen = buscarEnListaDeAdyacenciaPorNombre
+			(listaDeAdyacencia, "ALMACEN");
 
 	while (!heap->estaVacia()){
 
@@ -19,8 +22,8 @@ Lista<Arribo*>* CaminosMinimos::caminosMinimos(Cola<Arribo*>* heap, Lista<Viaje*
 		Arribo* almacenAProvincia = heap->quitarRaiz();
 
 		//busca en la lista de adyacencia, la lista de arribos de la provincia que fue removida
-		Lista<Arribo*>* arribosProvincia = buscarEnListaDeAdyacencia(listaDeAdyacencia,
-				almacenAProvincia);
+		Lista<Arribo*>* arribosProvincia = buscarEnListaDeAdyacencia
+				(listaDeAdyacencia,almacenAProvincia);
 
 		if(arribosProvincia != NULL){
 
@@ -29,50 +32,53 @@ Lista<Arribo*>* CaminosMinimos::caminosMinimos(Cola<Arribo*>* heap, Lista<Viaje*
 
 			while(arribosProvincia->avanzarCursor()){
 
-			/*obtiene el arribo actual de la lista de arribos*/
+				/*obtiene el arribo actual de la lista de arribos*/
 				Arribo* provinciaAProvincia = arribosProvincia->obtenerCursor();
 
-			/*busca la distancia desde almacen hasta la provincia actual
-			en la lista de arribos de Almacen*/
-				Arribo* candidatoAlmacenAProvincia = buscarEnListaDeArribos(arribosAlmacen, provinciaAProvincia);
+				if(elArriboTieneEstaSemilla(unaSemilla,provinciaAProvincia)){
 
+					/*busca el coste desde almacen hasta la provincia actual
+					en la lista de arribos de Almacen*/
+					Arribo* candidatoAlmacenAProvincia = buscarEnListaDeArribos(arribosAlmacen,
+								provinciaAProvincia, unaSemilla);
 
-				if ( elCosteDeLaSumaEsMenorAlCosteDirecto(almacenAProvincia,
-						provinciaAProvincia, candidatoAlmacenAProvincia)){
+					/*si mejoro el coste de la lista de candidatoAlmacenProvincia
+					 * promueve el vertice en el heap*/
+					if (actualizarDatosListaAdyacencia(almacenAProvincia,
+							provinciaAProvincia, candidatoAlmacenAProvincia)){
 
-					unsigned int nuevoCosto= ((*almacenAProvincia->obtenerCosto()) + (*provinciaAProvincia->obtenerCosto()));
+						heap->promover(candidatoAlmacenAProvincia);
 
-				/****METODO DE LA CLASE ARRIBO ******/
-					candidatoAlmacenAProvincia->cambiarCosto(nuevoCosto);
-
-				/****METODO DEL HEAP******/
-					heap->promover(candidatoAlmacenAProvincia);
-				/**puede ser que la provincia ya no este en el heap, en este caso
-				 * no pasa nada
-				 */
-				}
-
-			}
-
-		}
-
-	}
+					}
+				} //if
+			}//while arribosProvincia
+		}// if arribosProvincia
+	}//while heap
 
 	return arribosAlmacen;
 }
 
 
+/*******//*******/
+
 
 bool CaminosMinimos::elCosteDeLaSumaEsMenorAlCosteDirecto(Arribo* almacenAProvincia,
 		Arribo*provinciaAProvincia, Arribo* candidatoAlmacenAProvincia){
 
-	unsigned int sumaAlmacenAProvinciayProvinciaAProvincia = (*almacenAProvincia->obtenerCosto()) + (*provinciaAProvincia->obtenerCosto());
+	/*suma los costos desde el almacen hasta la provincia y desde la provincia
+	 * hasta la provincia canidata a mejorar*/
+	unsigned int sumaAlmacenAProvinciayProvinciaAProvincia =
+			(*almacenAProvincia->obtenerCosto()) +
+			(*provinciaAProvincia->obtenerCosto());
 
-	unsigned int costeCandidatoAlmacenAProvincia = (*candidatoAlmacenAProvincia->obtenerCosto());
+	unsigned int costeCandidatoAlmacenAProvincia =
+			(*candidatoAlmacenAProvincia->obtenerCosto());
 
-	return (sumaAlmacenAProvinciayProvinciaAProvincia < costeCandidatoAlmacenAProvincia);
+	return (sumaAlmacenAProvinciayProvinciaAProvincia <
+			costeCandidatoAlmacenAProvincia);
 
 }
+
 
 
 Lista<Arribo*>* CaminosMinimos::buscarEnListaDeAdyacencia(Lista<Viaje*>*
@@ -80,10 +86,7 @@ Lista<Arribo*>* CaminosMinimos::buscarEnListaDeAdyacencia(Lista<Viaje*>*
 
 	bool encontro=false;
 
-
 	Lista<Arribo*>* arribos=NULL;
-	/* si no tiene ningun arribo, no debería estar en la lista de adyacencia
-	desde un principio*/
 
 	listaDeAdyacencia->iniciarCursor();
 
@@ -104,14 +107,13 @@ Lista<Arribo*>* CaminosMinimos::buscarEnListaDeAdyacencia(Lista<Viaje*>*
 }
 
 
+
 Lista<Arribo*>* CaminosMinimos::buscarEnListaDeAdyacenciaPorNombre(Lista<Viaje*>* listaDeAdyacencia,
 		std::string nombreProvincia){
 
 	bool encontro=false;
 
 	Lista<Arribo*>* arribos=NULL;
-	/* si no tiene ningun arribo, no debería estar en la lista de adyacencia
-	desde un principio*/
 
 	listaDeAdyacencia->iniciarCursor();
 
@@ -133,31 +135,72 @@ Lista<Arribo*>* CaminosMinimos::buscarEnListaDeAdyacenciaPorNombre(Lista<Viaje*>
 }
 
 
+
 Arribo* CaminosMinimos::buscarEnListaDeArribos(Lista<Arribo*>* listaDeArribos,
-		Arribo* unArribo){
+		Arribo* unArribo, Semilla* unaSemilla){
 
 	bool encontro=false;
 
 
-	Arribo* arribo=NULL;
+	Arribo* arriboADevolver=NULL;
 
 	listaDeArribos->iniciarCursor();
 
 	while(listaDeArribos->avanzarCursor() && !encontro){
 
-		if(listaDeArribos->obtenerCursor()->obtenerArribo() == unArribo->obtenerArribo()){
+		Arribo* unArriboDeLaLista = listaDeArribos->obtenerCursor();
 
-			arribo = listaDeArribos->obtenerCursor();
+		if( unArriboDeLaLista->obtenerCultivo() == unaSemilla &&
+		unArriboDeLaLista->obtenerArribo() == unArribo->obtenerArribo()){
+
+			arriboADevolver = unArriboDeLaLista;
 			encontro = true;
 
 		}
 
 	}
 
-	return arribo;
+	return arriboADevolver;
 
 }
 
+
+
+bool CaminosMinimos::actualizarDatosListaAdyacencia(Arribo* almacenAProvincia,
+		Arribo* provinciaAProvincia, Arribo* candidatoAlmacenAProvincia){
+
+	bool promover = false;
+
+	if (elCosteDeLaSumaEsMenorAlCosteDirecto(almacenAProvincia,
+			provinciaAProvincia, candidatoAlmacenAProvincia)){
+
+		unsigned int nuevoCosto= ((*almacenAProvincia->obtenerCosto()) +
+		(*provinciaAProvincia->obtenerCosto()));
+
+		candidatoAlmacenAProvincia->cambiarCosto(nuevoCosto);
+
+		candidatoAlmacenAProvincia->cambiarEscalas
+		(almacenAProvincia->obtenerEscalas());
+
+		candidatoAlmacenAProvincia->agregarEscala
+		(almacenAProvincia->obtenerArribo());
+
+		promover = true;
+
+	}
+
+	return promover;
+}
+
+
+
+
+bool CaminosMinimos::elArriboTieneEstaSemilla(Semilla* unaSemilla,
+		Arribo* unArribo){
+
+	return (unArribo->obtenerCultivo() == unaSemilla);
+
+}
 
 
 

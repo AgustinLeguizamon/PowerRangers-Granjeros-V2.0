@@ -12,7 +12,7 @@
 #include "Viaje.h"
 #include "Lista.h"
 #include "Cola.h"
-
+#include "Semilla.h"
 
 
 
@@ -25,12 +25,12 @@ class CaminosMinimos{
 	public:
 
 	/*
-	 * post: recibe por parametro el heap con los costes de envio, y la lista
-	 * de adyacencia, remueve la raiz del heap y actualiza los costes
+	 * post: , remueve la raiz del heap y actualiza los costes
 	 * de los arribos y devuelve la lista de arribo a almacen.
 	 */
 
-	Lista<Arribo*>* caminosMinimos(Cola<Arribo*>* heap, Lista<Viaje*>* listaDeAdyacencia);
+	Lista<Arribo*>* caminosMinimosSegunLaSemilla(Cola<Arribo*>* heap,
+			Lista<Viaje*>* listaDeAdyacencia,Semilla* unaSemilla);
 
 	/*
 	 * post: devuelve si la suma del coste de los dos primeros parametros es menor
@@ -59,12 +59,26 @@ class CaminosMinimos{
 	 * post: busca en la lista de arribos un puntero a un arribo y lo devuelve
 	 */
 
-	Arribo* buscarEnListaDeArribos(Lista<Arribo*>* listaDeArribos, Arribo* unArribo);
+	Arribo* buscarEnListaDeArribos(Lista<Arribo*>* listaDeArribos,
+			Arribo* unArribo, Semilla* unaSemilla);
 
 
+
+	/*
+	 * post: devuelve si el coste del candidatoAlmacenAProvincia proveniente
+	 * de la lista de adyacencia fue actualizado
+	 */
+
+	bool CaminosMinimos::actualizarDatosListaAdyacencia(Arribo* almacenAProvincia,
+			Arribo* provinciaAProvincia, Arribo* candidatoAlmacenAProvincia);
+
+
+	/*
+	 * devuelve si unArribo tiene como cultivo a unaSemilla
+	 */
+
+	bool elArriboTieneEstaSemilla(Semilla* unaSemilla,Arribo* unArribo);
 
 };
-
-
 
 #endif /* SRC_CAMINOSMINIMOS_H_ */
